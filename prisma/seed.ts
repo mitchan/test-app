@@ -6,9 +6,12 @@ async function run() {
     const email = `user${i}@email.com`;
     return db.user.upsert({
       where: { email },
-      update: {},
+      update: {
+        name: `username ${i}`,
+      },
       create: {
         email,
+        name: `username ${i}`,
         password: await hashPassword(`password${i}`),
         posts: {
           create: new Array(5).fill(1).map((_, i) => ({

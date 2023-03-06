@@ -1,5 +1,11 @@
+import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { SignJWT, jwtVerify } from "jose";
+import {
+  RequestCookie,
+  RequestCookies,
+} from "next/dist/compiled/@edge-runtime/cookies";
+import { ReadonlyRequestCookies } from "next/dist/server/app-render";
 import { db } from "./db";
 
 export const hashPassword = (password: string) => bcrypt.hash(password, 10);
@@ -30,8 +36,17 @@ export const validateJWT = async (jwt: string) => {
   return payload.payload as any;
 };
 
-export const getUserFromCookie = async (cookies) => {
+export const getUserFromCookie = async (
+  cookies: RequestCookies | ReadonlyRequestCookies
+): Promise<User | null> => {
+  if (!process.env.AUTH_COOKIE) {
+    throw new Error("process.env.AUTH_COOKIE not set");
+  }
+
   const jwt = cookies.get(process.env.AUTH_COOKIE);
+  if (!jwt) {
+    return null;
+  }
 
   const { id } = await validateJWT(jwt.value);
 
