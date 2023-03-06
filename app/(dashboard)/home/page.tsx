@@ -1,3 +1,9 @@
+import { Posts } from "../../../components/Posts";
+
 export default function Page() {
-  return <div>Home works</div>;
+  return (
+    <>
+      <Posts />
+    </>
+  );
 }
