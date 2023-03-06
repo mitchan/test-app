@@ -1,17 +1,23 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
+import { signin } from "../lib/api";
 import { TextField } from "./input/TextField";
 
 export function SigninForm() {
+  const router = useRouter();
+
   const [form, setForm] = React.useState({
     email: "",
     password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ form });
+
+    await signin(form);
+    router.push("/home");
   };
 
   return (
